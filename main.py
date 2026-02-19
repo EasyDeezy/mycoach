@@ -1,4 +1,16 @@
+import os
+import subprocess
 from coach import Coach
+
+# Load ANTHROPIC_API_KEY from ~/.zshrc if not already set
+if not os.environ.get("ANTHROPIC_API_KEY"):
+    result = subprocess.run(
+        ["zsh", "-c", "source ~/.zshrc && echo $ANTHROPIC_API_KEY"],
+        capture_output=True, text=True
+    )
+    key = result.stdout.strip()
+    if key:
+        os.environ["ANTHROPIC_API_KEY"] = key
 
 
 def main():
