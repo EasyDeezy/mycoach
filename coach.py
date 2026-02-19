@@ -17,7 +17,7 @@ class Coach:
         self,
         client: Optional[anthropic.Anthropic] = None,
         system_prompt: str = DEFAULT_SYSTEM_PROMPT,
-        model: str = "claude-opus-4-6",
+        model: str = "claude-haiku-4-5",
     ):
         self.client = client or anthropic.Anthropic()
         self.system_prompt = system_prompt
@@ -37,7 +37,6 @@ class Coach:
             max_tokens=1024,
             system=self.system_prompt,
             messages=list(self._messages),
-            thinking={"type": "adaptive"},
         ) as stream:
             response_text = ""
             for text in stream.text_stream:

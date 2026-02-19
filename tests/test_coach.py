@@ -36,7 +36,7 @@ class TestCoachInit:
 
     def test_default_model(self, mock_client):
         coach = Coach(client=mock_client)
-        assert coach.model == "claude-opus-4-6"
+        assert coach.model == "claude-haiku-4-5"
 
     def test_custom_model(self, mock_client):
         coach = Coach(client=mock_client, model="claude-haiku-4-5")
