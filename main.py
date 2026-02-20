@@ -13,6 +13,17 @@ if not os.environ.get("ANTHROPIC_API_KEY"):
         os.environ["ANTHROPIC_API_KEY"] = key
 
 
+def strip_markdown(text: str) -> str:
+    import re
+    text = re.sub(r"#{1,6}\s*", "", text)       # headings
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text) # bold
+    text = re.sub(r"\*(.+?)\*", r"\1", text)      # italic
+    text = re.sub(r"`(.+?)`", r"\1", text)         # inline code
+    text = re.sub(r"^[-*]\s+", "- ", text, flags=re.MULTILINE)  # bullets
+    text = re.sub(r"\n{3,}", "\n\n", text)         # excess blank lines
+    return text.strip()
+
+
 def save_conversation(history: list) -> None:
     path = "/tmp/mycoach_conversation.txt"
     with open(path, "w") as f:
@@ -20,7 +31,8 @@ def save_conversation(history: list) -> None:
         f.write("=" * 40 + "\n\n")
         for msg in history:
             role = "You" if msg["role"] == "user" else "Coach"
-            f.write(f"{role}: {msg['content']}\n\n")
+            content = strip_markdown(msg["content"])
+            f.write(f"{role}: {content}\n\n")
     print(f"\nConversation saved to {path} — print with: lpr {path}")
 
 
