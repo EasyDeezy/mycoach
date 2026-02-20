@@ -13,6 +13,17 @@ if not os.environ.get("ANTHROPIC_API_KEY"):
         os.environ["ANTHROPIC_API_KEY"] = key
 
 
+def save_conversation(history: list) -> None:
+    path = "/tmp/mycoach_conversation.txt"
+    with open(path, "w") as f:
+        f.write("MyCoach Conversation\n")
+        f.write("=" * 40 + "\n\n")
+        for msg in history:
+            role = "You" if msg["role"] == "user" else "Coach"
+            f.write(f"{role}: {msg['content']}\n\n")
+    print(f"\nConversation saved to {path} — print with: lpr {path}")
+
+
 def main():
     coach = Coach()
     print("MyCoach — type 'quit' to exit, 'reset' to start over.\n")
@@ -22,6 +33,7 @@ def main():
         if not user_input:
             continue
         if user_input.lower() == "quit":
+            save_conversation(coach.history)
             break
         if user_input.lower() == "reset":
             coach.reset()
